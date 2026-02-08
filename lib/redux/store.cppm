@@ -50,6 +50,14 @@ class Store {
 
     using ReducerFn = std::function<void(StateT&, const ActionT&)>;
 
+private:
+
+    std::shared_mutex mutex_;
+    StateT state_;
+    const ReducerFn& reducer_;
+
+    StateWriter<StateT> writer() { return StateWriter(mutex_, state_); }
+
 public:
 
     Store(
@@ -58,17 +66,11 @@ public:
     ) : state_(state), reducer_(reducer) {};
 
     StateReader<StateT> reader() { return StateReader(mutex_, state_); }
-    StateWriter<StateT> writer() { return StateWriter(mutex_, state_); }
 
     void dispatch(ActionT action) {
         const auto writer = this->writer();
         reducer_(writer.data(), action);
     }
-
-private:
-    std::shared_mutex mutex_;
-    StateT state_;
-    const ReducerFn& reducer_;
 
 }; // class Store
 
