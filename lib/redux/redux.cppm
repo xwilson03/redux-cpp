@@ -5,7 +5,9 @@ module;
 export module redux;
 namespace redux {
 
-
+/*
+ * StateReader is publicly accessible from the store and used to access the internal state.
+ */
 template <typename StateT>
 class StateReader {
 
@@ -25,6 +27,9 @@ public:
 }; // class StateReader
 
 
+/*
+ * StateWriter is privated and only used by the Store internally for dispatching actions.
+ */
 template <typename StateT>
 class StateWriter {
 
@@ -44,6 +49,10 @@ public:
 }; // class StateWriter
 
 
+/*
+ * Store wraps the active state with concurrent read/write access control.
+ * It uses an injected reducer function to modify the state.
+ */
 export
 template <typename StateT, typename ActionT>
 class Store {
