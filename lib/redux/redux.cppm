@@ -2,6 +2,7 @@ module;
 #include <functional>
 #include <mutex>
 #include <shared_mutex>
+#include <vector>
 export module redux;
 namespace redux {
 
@@ -51,19 +52,22 @@ public:
 
 /*
  * Store wraps the active state with concurrent read/write access control.
- * It uses an injected reducer function to modify the state.
+ * It uses an injected reducer function to modify the state and invokes listener
+ * callbacks afterwards.
  */
 export
 template <typename StateT, typename ActionT>
 class Store {
 
     using ReducerFn = std::function<void(StateT&, const ActionT&)>;
+    using ListenerFn = std::function<void(const StateT&)>;
 
 private:
 
     std::shared_mutex mutex_;
     StateT state_;
     const ReducerFn reducer_;
+    std::vector<ListenerFn> listeners_;
 
     const StateWriter<StateT> writer() { return StateWriter(mutex_, state_); }
 
@@ -77,8 +81,16 @@ public:
     const StateReader<StateT> reader() { return StateReader(mutex_, state_); }
 
     void dispatch(const ActionT& action) {
-        const auto writer = this->writer();
-        reducer_(writer.data(), action);
+        {
+            const auto writer = this->writer();
+            reducer_(writer.data(), action);
+        }
+        const auto reader = this->reader();
+        for (const auto& listener : listeners_) listener(reader.data());
+    }
+
+    void subscribe(const ListenerFn& listener) {
+        listeners_.push_back(listener);
     }
 
 }; // class Store

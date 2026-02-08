@@ -21,22 +21,18 @@ void TestReducer (
 int main() {
 
     TestStateT initialState = 0;
-
     redux::Store<TestStateT,TestActionT> store (initialState, TestReducer);
 
+    int i = 1;
+    store.subscribe([&](const TestStateT& state){
+        std::cout << std::to_string(i++) << ": " << std::to_string(state) << std::endl;
+    });
+
     for (int i = 0; i < 5; i++) {
-        {
-            auto reader = store.reader();
-            std::cout << "1: " << std::to_string(reader.data()) << std::endl;
-        }
         store.dispatch(TestActionT::Increment);
     }
 
     for (int i = 0; i < 5; i++) {
-        {
-            auto reader = store.reader();
-            std::cout << "1: " << std::to_string(reader.data()) << std::endl;
-        }
         store.dispatch(TestActionT::Decrement);
     }
 
