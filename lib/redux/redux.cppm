@@ -12,13 +12,13 @@ template <typename StateT>
 class StateReader {
 
 private:
-    std::shared_lock<std::shared_mutex> lock_;
+    const std::shared_lock<std::shared_mutex> lock_;
     const StateT& data_;
 
 public:
     StateReader(
-        std::shared_mutex &m,
-        const StateT &s
+        std::shared_mutex& m,
+        const StateT& s
     ) : lock_(m), data_(s) {};
 
     const StateT& data() const & { return data_; };
@@ -34,13 +34,13 @@ template <typename StateT>
 class StateWriter {
 
 private:
-    std::unique_lock<std::shared_mutex> lock_;
+    const std::unique_lock<std::shared_mutex> lock_;
     StateT& data_;
 
 public:
     StateWriter(
-        std::shared_mutex &m,
-        StateT &s
+        std::shared_mutex& m,
+        StateT& s
     ) : lock_(m), data_(s) {};
 
     StateT& data() const & { return data_; };
@@ -63,20 +63,20 @@ private:
 
     std::shared_mutex mutex_;
     StateT state_;
-    const ReducerFn& reducer_;
+    const ReducerFn reducer_;
 
-    StateWriter<StateT> writer() { return StateWriter(mutex_, state_); }
+    const StateWriter<StateT> writer() { return StateWriter(mutex_, state_); }
 
 public:
 
     Store(
-        StateT state,
+        const StateT& state,
         const ReducerFn& reducer
     ) : state_(state), reducer_(reducer) {};
 
-    StateReader<StateT> reader() { return StateReader(mutex_, state_); }
+    const StateReader<StateT> reader() { return StateReader(mutex_, state_); }
 
-    void dispatch(ActionT action) {
+    void dispatch(const ActionT& action) {
         const auto writer = this->writer();
         reducer_(writer.data(), action);
     }
