@@ -21,16 +21,20 @@ class Store {
 
         class Reader {
             ReadLock lock_;
+            const StateT& data_;
         public:
-            Reader(Mutex &m, const StateT &s) : lock_(m), data(s) {};
-            const StateT& data;
+            Reader(Mutex &m, const StateT &s) : lock_(m), data_(s) {};
+            const StateT& data() const & { return data_; };
+            const StateT& data() const && = delete;
         };
 
         class Writer {
             WriteLock lock_;
+            StateT& data_;
         public:
-            Writer(Mutex &m, StateT &s) : lock_(m), data(s) {};
-            StateT& data;
+            Writer(Mutex &m, StateT &s) : lock_(m), data_(s) {};
+            StateT& data() & { return data_; };
+            StateT& data() && = delete;
         };
 
         Reader reader() { return Store::Reader(mutex_, state_); }
