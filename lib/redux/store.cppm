@@ -1,4 +1,5 @@
 module;
+#include <functional>
 #include <mutex>
 #include <shared_mutex>
 export module redux:store;
@@ -37,23 +38,37 @@ public:
         StateT &s
     ) : lock_(m), data_(s) {};
 
-    StateT& data() & { return data_; };
-    StateT& data() && = delete;
+    StateT& data() const & { return data_; };
+    StateT& data() const && = delete;
 
 }; // class StateWriter
 
 
 export
-template <typename StateT>
+template <typename StateT, typename ActionT>
 class Store {
 
+    using ReducerFn = std::function<void(StateT&, const ActionT&)>;
+
 public:
+
+    Store(
+        StateT state,
+        const ReducerFn& reducer
+    ) : state_(state), reducer_(reducer) {};
+
     StateReader<StateT> reader() { return StateReader(mutex_, state_); }
     StateWriter<StateT> writer() { return StateWriter(mutex_, state_); }
+
+    void dispatch(ActionT action) {
+        const auto writer = this->writer();
+        reducer_(writer.data(), action);
+    }
 
 private:
     std::shared_mutex mutex_;
     StateT state_;
+    const ReducerFn& reducer_;
 
 }; // class Store
 
