@@ -17,4 +17,8 @@ include(GNUInstallDirs)
 # Project
 project(testing)
 add_subdirectory(lib)
-add_subdirectory(example)
+
+option(BUILD_EXAMPLES "Toggle building examples on/off." OFF)
+if(${BUILD_EXAMPLES})
+  add_subdirectory(example)
+endif()

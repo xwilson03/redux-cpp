@@ -18,6 +18,7 @@ main() {
     cmake \
         -G Ninja \
         -DCMAKE_INSTALL_PREFIX="$INSTALL_DIR" \
+        -DBUILD_EXAMPLES=ON \
         -B "$BUILD_DIR" \
         "$SOURCE_DIR"
 
