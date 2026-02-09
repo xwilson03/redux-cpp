@@ -10,6 +10,7 @@ int main() {
         std::cout << std::to_string(state) << std::endl;
     });
 
-    for (int i = 0; i < 5; i++) store.dispatch(ExampleAction::Increment);
-    for (int i = 0; i < 5; i++) store.dispatch(ExampleAction::Decrement);
+    for (int i = 0; i < 5; i++) store.dispatch(Increment {2} );
+    for (int i = 0; i < 5; i++) store.dispatch(Decrement {1} );
+    store.dispatch(Negate {} );
 }
