@@ -74,9 +74,8 @@ private:
 public:
 
     Store(
-        const StateT& state,
         const ReducerFn& reducer
-    ) : state_(state), reducer_(reducer) {};
+    ) : state_(), reducer_(reducer) {};
 
     const StateReader<StateT> reader() { return StateReader(mutex_, state_); }
 

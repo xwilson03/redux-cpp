@@ -34,8 +34,7 @@ void Reducer(
 
 export class Store : public redux::Store<State, Action> {
 public:
-    Store(const State& state)
-    : redux::Store<State, Action>(state, Reducer) {}
+    Store() : redux::Store<State, Action>(Reducer) {}
 };
 
 

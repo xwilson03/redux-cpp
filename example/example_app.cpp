@@ -4,7 +4,7 @@ import example_store;
 
 int main() {
 
-    Example::Store store(0);
+    Example::Store store;
 
     store.subscribe([](const Example::State& state){
         std::cout << std::to_string(state) << std::endl;
