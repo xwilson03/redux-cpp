@@ -4,13 +4,13 @@ import example_store;
 
 int main() {
 
-    ExampleStore store(0);
+    Example::Store store(0);
 
-    store.subscribe([](const ExampleState& state){
+    store.subscribe([](const Example::State& state){
         std::cout << std::to_string(state) << std::endl;
     });
 
-    for (int i = 0; i < 5; i++) store.dispatch(Increment {2} );
-    for (int i = 0; i < 5; i++) store.dispatch(Decrement {1} );
-    store.dispatch(Negate {} );
+    for (int i = 0; i < 5; i++) store.dispatch(Example::Increment {2} );
+    for (int i = 0; i < 5; i++) store.dispatch(Example::Decrement {1} );
+    store.dispatch(Example::Negate {} );
 }

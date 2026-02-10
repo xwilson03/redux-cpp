@@ -2,15 +2,16 @@ module;
 #include <variant>
 export module example_store;
 import redux;
+namespace Example {
 
 
-export using ExampleState = int;
+export using State = int;
 
 export struct Increment { int amount; };
 export struct Decrement { int amount; };
 export struct Negate    {};
 
-export using ExampleAction = std::variant<
+using Action = std::variant<
     Increment,
     Decrement,
     Negate
@@ -20,9 +21,9 @@ export using ExampleAction = std::variant<
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
-void ExampleReducer(
-    ExampleState& state,
-    const ExampleAction& action
+void Reducer(
+    State& state,
+    const Action& action
 ) {
     std::visit(overloaded {
         [&](Increment args) { state += args.amount; },
@@ -31,8 +32,11 @@ void ExampleReducer(
     }, action);
 }
 
-export class ExampleStore : public redux::Store<ExampleState, ExampleAction> {
+export class Store : public redux::Store<State, Action> {
 public:
-    ExampleStore(const ExampleState& state)
-    : redux::Store<ExampleState, ExampleAction>(state, ExampleReducer) {}
+    Store(const State& state)
+    : redux::Store<State, Action>(state, Reducer) {}
 };
+
+
+} // namespace Example
