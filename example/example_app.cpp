@@ -7,7 +7,7 @@ int main() {
     Example::Store store;
 
     store.subscribe([](const Example::State& state){
-        std::cout << std::to_string(state) << std::endl;
+        std::cout << std::to_string(state.value) << std::endl;
     });
 
     for (int i = 0; i < 5; i++) store.dispatch(Example::Increment {2} );

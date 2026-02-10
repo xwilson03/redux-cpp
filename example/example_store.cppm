@@ -5,7 +5,9 @@ import redux;
 namespace Example {
 
 
-export using State = int;
+export struct State {
+    int value;
+};
 
 export struct Increment { int amount; };
 export struct Decrement { int amount; };
@@ -26,9 +28,9 @@ void Reducer(
     const Action& action
 ) {
     std::visit(overloaded {
-        [&](Increment args) { state += args.amount; },
-        [&](Decrement args) { state -= args.amount; },
-        [&](Negate    args) { state *= -1;          }
+        [&](Increment args) { state.value += args.amount; },
+        [&](Decrement args) { state.value -= args.amount; },
+        [&](Negate    args) { state.value *= -1;          }
     }, action);
 }
 
