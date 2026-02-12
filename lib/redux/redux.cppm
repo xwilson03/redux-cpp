@@ -60,7 +60,7 @@ template <typename StateT, typename ActionT>
 class Store {
 
     using ReducerFn = std::function<void(StateT&, const ActionT&)>;
-    using ListenerFn = std::function<void(const StateT&)>;
+    using ListenerFn = std::function<void()>;
 
 private:
 
@@ -85,7 +85,7 @@ public:
             reducer_(writer.data(), action);
         }
         const auto reader = this->reader();
-        for (const auto& listener : listeners_) listener(reader.data());
+        for (const auto& listener : listeners_) listener();
     }
 
     void subscribe(const ListenerFn& listener) {
