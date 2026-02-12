@@ -84,7 +84,6 @@ public:
             const auto writer = this->writer();
             reducer_(writer.data(), action);
         }
-        const auto reader = this->reader();
         for (const auto& listener : listeners_) listener();
     }
 
