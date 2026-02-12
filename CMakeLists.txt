@@ -15,10 +15,10 @@ set(CMAKE_CXX_SCAN_FOR_MODULES    ON)
 include(GNUInstallDirs)
 
 # Project
-project(testing)
+project(redux-cpp)
 add_subdirectory(lib)
 
 option(BUILD_EXAMPLES "Toggle building examples on/off." OFF)
-if(${BUILD_EXAMPLES})
+if(${PROJECT_IS_TOP_LEVEL} AND ${BUILD_EXAMPLES})
   add_subdirectory(example)
 endif()
